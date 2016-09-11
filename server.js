@@ -1,36 +1,48 @@
 var mqtt = require('mqtt');
- 
+var server = require('http').createServer();
 // create a socket object that listens on port 5000
-var io = require('socket.io').listen(5000);
- 
-// create an mqtt client object and connect to the mqtt broker
+var io = require('socket.io')(server);
+var port = Number(process.env.PORT || 4444);
+
 var client = mqtt.connect({
-    host : 'mqtt://pkncsiao:IQ3_Gdn5ipno@m12.cloudmqtt.com:18736',
-    port : 18736,
-    username : 'pkncsiao',
-    password : 'IQ3_Gdn5ipno'
+    host : '188.166.184.34',
+    port : 6969,
+    username : 'pipeeroac05c207b',
+    password : '5738921e589fcb114312db62'
 });
- 
+
+// var client = mqtt.connect({
+//   host : '188.166.184.34',
+//   port : 8883
+// });
+
 io.sockets.on('connection', function (socket) {
-    // socket connection indicates what mqtt topic to subscribe to in data.topic
+
     socket.on('subscribe', function (data) {
         console.log('Subscribing to '+data.topic);
         socket.join(data.topic);
         client.subscribe(data.topic);
+
+
+        var clients = io.sockets.adapter.rooms;
+
     });
-    // when socket connection publishes a message, forward that message
-    // the the mqtt broker
+
     socket.on('publish', function (data) {
-        console.log('Publishing to '+data.topic);
+        console.log('Publishing to ' + data.topic + " message: " + data.payload);
         client.publish(data.topic,data.payload);
     });
 });
- 
+
 // listen to messages coming from the mqtt broker
 client.on('message', function (topic, payload, packet) {
     console.log(topic+'='+payload);
-    // io.sockets.emit('mqtt',{'topic':String(topic ),
-    //                         'payload':String(payload)});
-            
-    io.sockets.in(String(topic)).emit('server-to-client', {'topic':String(topic),'payload':String(payload)});                              
+
+    io.sockets.in(String(topic)).emit('server-to-client', {'topic':String(topic),'payload':String(payload)});
 });
+
+client.on('connect', function () {
+  console.log('new thing connection');
+});
+
+server.listen(port);

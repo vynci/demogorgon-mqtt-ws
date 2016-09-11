@@ -1,7 +1,7 @@
 var mqtt    = require('mqtt');
 // var client = mqtt.connect({
 //   host : '188.166.184.34',
-//   port : 6969
+//   port : 8883
 // });
 var client = mqtt.connect({
   host : '188.166.184.34',
@@ -11,7 +11,7 @@ var client = mqtt.connect({
 });
 
 var userId = '5738921e589fcb114312db62';
-var thingId = '57d4590166570c5d4a277339';
+var thingId = '5738a126919d163b49cad273';
 
 client.on('connect', function () {
   client.subscribe('pub/' + userId + '/' + thingId);
