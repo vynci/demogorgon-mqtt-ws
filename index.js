@@ -11,21 +11,12 @@ var client = mqtt.connect({
     password : '5738921e589fcb114312db62'
 });
 
-// var client = mqtt.connect({
-//   host : '188.166.184.34',
-//   port : 8883
-// });
-
 io.sockets.on('connection', function (socket) {
 
     socket.on('subscribe', function (data) {
         console.log('Subscribing to '+data.topic);
         socket.join(data.topic);
         client.subscribe(data.topic);
-
-
-        var clients = io.sockets.adapter.rooms;
-
     });
 
     socket.on('publish', function (data) {
@@ -37,7 +28,6 @@ io.sockets.on('connection', function (socket) {
 // listen to messages coming from the mqtt broker
 client.on('message', function (topic, payload, packet) {
     console.log(topic+'='+payload);
-
     io.sockets.in(String(topic)).emit('server-to-client', {'topic':String(topic),'payload':String(payload)});
 });
 
