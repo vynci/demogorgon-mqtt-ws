@@ -4,8 +4,8 @@ exports.addLog = function(thingId, owner, value){
 
 	var formData = {
 		"thingId":  thingId,
-		"value":  owner,
-		"owner":  value
+		"value":  value,
+		"owner":  owner
 	};
 
 	request.post('https://pipeero-rest-api.herokuapp.com/pipe/log', {form:formData}, function optionalCallback(err, httpResponse, body) {
